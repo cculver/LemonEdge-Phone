@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "LemonEdge.Backend": {
+      "commandName": "Project",
+      "launchUrl": "weatherforecast",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:2000"
+    }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json"
+}

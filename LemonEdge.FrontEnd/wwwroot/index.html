@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>LemonEdge-Phone</title>
+    <base href="/" />
+    <link href="https://fonts.googleapis.com/css?family=Exo" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            variants: {
+                extend: {
+                    backgroundColor: ['active'],
+                }
+            },
+            theme: {
+                fontFamily: {
+                    'number': ['Exo']
+                },
+                fontSize: {
+                    'sub': '0.8rem',
+                    'dig': '2rem',
+                    '7xl': '5rem',
+                },
+                height: {
+                    '420': '440px'
+                },
+                extend: {
+                    width: {
+                        '320': '260px'
+                    },
+                    spacing: {
+                        'pad10': '10px',
+                        'pad20': '20px',
+                        'pad30': '30px'
+                    },
+                    padding: {
+                        'pad20': '20px'
+                    },
+                    colors: {
+                        clifford: '#da373d',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div id="app">Loading...</div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+</body>
+
+</html>

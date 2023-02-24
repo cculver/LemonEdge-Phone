@@ -1,0 +1,223 @@
+﻿@page "/"
+@using LemonEdge.Shared
+@inject HttpClient Http
+
+<PageTitle>Chess Phone Numbers</PageTitle>
+
+<div class="flex flex-row">
+<div class="basis-1/4">
+@if (pieces == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+        <select @ref="pieceSelector" class="text-7xl" @onchange="typeChanged">
+        @foreach(var piece in pieces)
+        {
+            <option value="@piece.Name">@((MarkupString)(piece?.UnicodeCharacter ?? ""))@piece?.Name</option>
+        }
+        </select>
+}
+
+        <div class="bg-white w-320 h-420 p-pad20 mx-pad30 my-pad10 h-auto place-self-center rounded-sm shadow-lg shadow-slate-500 text-center">
+            <div class="font-number w-280 mx-0 my-auto clear-both text-center">
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer active:bg-gray-200" @onclick="@(()=>LoadResults("1"))">
+                    1
+                </div>
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer active:bg-gray-200" @onclick="@(()=>LoadResults("2"))">
+                    2
+                    <div class="text-sub text-gray-500">ABC</div>
+                </div>
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer active:bg-gray-200" @onclick="@(()=>LoadResults("3"))">
+                    3
+                    <div class="text-sub text-gray-500">DEF</div>
+                </div>
+            </div>
+            <div class="font-number w-280 mx-0 my-auto clear-both text-center">
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer active:bg-gray-200" @onclick="@(()=>LoadResults("4"))">
+                    4
+                    <div class="text-sub text-gray-500">GHI</div>
+                </div>
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer active:bg-gray-200" @onclick="@(()=>LoadResults("5"))">
+                    5
+                    <div class="text-sub text-gray-500">JKL</div>
+                </div>
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer active:bg-gray-200" @onclick="@(()=>LoadResults("6"))">
+                    6
+                    <div class="text-sub text-gray-500">MNO</div>
+                </div>
+            </div>
+            <div class="font-number w-280 mx-0 my-auto clear-both text-center">
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer active:bg-gray-200" @onclick="@(()=>LoadResults("7"))">
+                    7
+                    <div class="text-sub text-gray-500">PQRS</div>
+                </div>
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer active:bg-gray-200" @onclick="@(()=>LoadResults("8"))">
+                    8
+                    <div class="text-sub text-gray-500">TUV</div>
+                </div>
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer active:bg-gray-200" @onclick="@(()=>LoadResults("9"))">
+                    9
+                    <div class="text-sub text-gray-500">WXYZ</div>
+                </div>
+            </div>
+            <div class="font-number w-280 mx-0 my-auto clear-both text-center">
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer ">
+                    *
+                </div>
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer active:bg-gray-200" @onclick="@(()=>LoadResults("0"))">
+                    0
+                </div>
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer ">
+                    #
+                </div>
+            </div>
+            <div class="font-number w-280 mx-0 my-auto clear-both text-center">
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer ">
+                    
+                </div>
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer active:bg-gray-200" @onclick="@(()=>LoadResults())">
+                    All
+                </div>
+                <div class="float-left px-pad30 py-pad10 w-pad30 text-dig cursor-pointer ">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="basis-3/4">
+    @if(loading)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else if(results == null)
+    {
+        <p><em>Press a digit to select a sequence.</em></p>
+    }
+    else
+    {
+        <MudTable Items="@results" Dense="@true" Hover="@true" Bordered="@false" Striped="@true" Filter="new Func<ChessPieceNumber,bool>(FilterFunc1)" >
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Periodic Elements</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Type</MudTh>
+                <MudTh>Number</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Nr">@((MarkupString)context.UnicodeCharacter)</MudTd>
+                <MudTd DataLabel="Sign">@(context.Number?.Substring(0,3)+"-"+context.Number?.Substring(3,4))</MudTd>
+            </RowTemplate>
+            <PagerContent>
+                <MudTablePager />
+            </PagerContent>
+        </MudTable>
+
+        @if(string.IsNullOrEmpty(selectedNumber))
+        {
+            <a class="text-ls oi-underline font-bold font-number" href="http://localhost:2000/phonelist/numbers/raw/@selectedPiece" target="_blank">Download</a>
+        }
+        else
+        {
+            <a class="text-xl underline font-bold font-number" href="http://localhost:2000/phonelist/numbers/raw/@selectedPiece/@selectedNumber" target="_blank">Download</a>
+        }
+    }
+</div>
+</div>
+@code {
+    private string? selectedPiece;
+    private string? selectedNumber;
+    private ChessPieceDescription[]? pieces;
+    private ChessPieceNumber[]? results;
+    private ElementReference? pieceSelector;
+    private string searchString1 = "";
+    private bool loading = false;
+
+    protected bool FilterFunc1(ChessPieceNumber number) => FilterFunc(number, searchString1);
+
+    protected bool FilterFunc(ChessPieceNumber number, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+
+        return number?.Number?.Contains(searchString1.Replace("-","")) ?? false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            pieces = await Http.GetFromJsonAsync<ChessPieceDescription[]>("http://localhost:2000/phonelist/pieces");
+            selectedPiece = pieces?.First().Name;
+        }
+        catch(Exception)
+        {
+
+        }
+    }
+
+    protected async Task typeChanged(ChangeEventArgs e)
+    {
+        selectedPiece = ((string?)e.Value);
+        //try
+        //{
+        //    if (selectedPiece == "All")
+        //    {
+        //        loading = true;
+        //        selectedNumber = "";
+        //        results = await Http.GetFromJsonAsync<ChessPieceNumber[]>($"http://localhost:2000/phonelist/numbers");
+        //    }
+        //    else
+        //    {
+        //        results = null;
+        //    }
+        //}
+        //catch (Exception)
+        //{
+        //
+        //}
+        //loading = false;
+    }
+
+    protected async Task LoadResults(string number)
+    {
+        try
+        {
+            if (selectedPiece != "All")
+            {
+                loading = true;
+                selectedNumber = number;
+                results = await Http.GetFromJsonAsync<ChessPieceNumber[]>($"http://localhost:2000/phonelist/numbers/{selectedPiece}/{number}");
+            }
+        }
+        catch (Exception)
+        {
+
+        }
+
+        loading = false;
+    }
+
+    protected async Task LoadResults()
+    {
+        try
+        {
+            if (selectedPiece != "All")
+            {
+                loading = true;
+                selectedNumber = "";
+                results = await Http.GetFromJsonAsync<ChessPieceNumber[]>($"http://localhost:2000/phonelist/numbers/{selectedPiece}");
+            }
+        }
+        catch (Exception)
+        {
+
+        }
+
+        loading = false;
+    }
+
+}
